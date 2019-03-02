@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# For Ubuntu 18.10
+# description: Receive the file name to be executed as 2 arguments.
+#              Output the memory usage of the executed program into stdout
+#              1st argument-> executable file name
+#              2st argument-> path where exists executable file
+# 
+# usage: bash ./memory_cost.sh ./main /var/tmp/
+
+###############################################################################
+# Copyright 2019 by Onegina Alyona
+# Authors: Onegina Alyona
+
+# running_dir
+RUNNING_DIR=$2
+cd $RUNNING_DIR
+
+set -um
+
+[[ $# -gt 0 ]] || { sed -n '2,/^#$/ s/^# //p' <"$0"; exit 1; }
+
+pgid=$(ps -o pgid= $$)
+
+case $(uname) in
+    Darwin|*BSD) sizes() { /bin/ps -o rss= -g $1; } ;;
+    Linux) sizes() { /bin/ps -o rss= -$1; } ;;
+    *) echo "$(uname): unsupported operating system" >&2; exit 2 ;;
+esac
+
+(
+peak=0
+while sizes=$(sizes $pgid)
+do
+    set -- $sizes
+    sample=$((${@/#/+}))
+    let peak="sample > peak ? sample : peak"
+    sleep 0.1
+done
+echo "$peak"
+) &
+monpid=$!
+
+exec timeout 5s $1<in.txt >out.txt 2>error.txt
+
+# exec "$@"

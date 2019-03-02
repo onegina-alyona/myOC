@@ -1,0 +1,11 @@
+FROM gcc:4.9
+COPY . /gcc/main
+WORKDIR /gcc/main
+RUN cat error.txt
+RUN g++ -o main main.cpp 2>error.txt; exit 0
+COPY in.txt /main/in.txt
+RUN cat error.txt
+RUN cat in.txt
+RUN ./main <in.txt >out.txt; exit 0
+RUN cat out.txt
+CMD ["./main"]

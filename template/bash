@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+fib() {
+    local n="$1"
+
+    if [ "$n" -eq 0 ]; then
+        echo "0"
+        return 0
+    fi
+    if [ "$n" -eq 1 ]; then
+        echo "1"
+        return 0
+    fi
+
+    local vfibp=$(fib $((n-1)))
+    local vfibpp=$(fib $((n-2)))
+
+    echo $((vfibp+vfibpp))
+    #calc=$(echo "sqrt ( 10 )" | bc -l) ; echo $calc
+}
+
+main() {
+    local line
+
+    while read line
+    do
+        fib $line
+    done < "${1:-/proc/${$}/fd/0}"
+}
+
+main

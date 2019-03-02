@@ -1,0 +1,9 @@
+def fib(n)
+  return 0 if n == 0
+  return 1 if n == 1
+  fib(n-1) + fib(n-2)
+end
+
+ARGF.each_line.map(&:to_i).map do |number|
+  puts fib(number)
+end

@@ -1,0 +1,23 @@
+Imports System
+
+Public Class Test
+	Public Shared Function fib(ByVal n As Integer) As Integer
+		If n = 0 Then
+			Return 0
+		Else If n = 1 Then
+			Return 1
+		End If
+		Return fib(n-1) + fib(n-2)
+	End Function
+
+	Public Shared Sub Main()
+		Dim line as String
+
+		line = Console.ReadLine()
+
+		While Not IsNothing(line)
+			Console.WriteLine(fib(Integer.Parse(line)))
+			line = Console.ReadLine()
+		End While
+	End Sub
+End Class
